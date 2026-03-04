@@ -15,7 +15,7 @@ public class StartController {
     @GetMapping("/") //주로 index.html로 이동
     public String index() {
         return "redirect:/dish/list";
-        dhodksehlfRk
+
 
 
         //요청 처리 후 돌아가는 방식은 2가지
