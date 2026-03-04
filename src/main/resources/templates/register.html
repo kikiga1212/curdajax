@@ -12,7 +12,7 @@
   <!--스프링부트에서 제공하는 아이콘-->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css" rel="stylesheet"/>
   <!--알람창 스크립트-->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <div class="container mt-5">
@@ -43,7 +43,7 @@
                         <textarea class="form-control" name="desc" rows="3"></textarea>
                     </div>
                     <div><!--작업버튼, submit 사용안하고 스크립트로 전달-->
-                        <button class="btn btn-primary" id="addButton" type="btton">
+                        <button class="btn btn-primary" id="addButton" type="button">
                             <i class="bi-file-earmark-check"></i>저장
                         </button>
                         <a class="btn btn-danger" th:href="@{/dish/list}">
@@ -69,10 +69,11 @@
                 contentType: false,
 
                 success: function(data){
-                    Swal.fire(data).then(()=>{ //성공메세지 출력
-                        //location.reload(); //삽입페이지를 다시읽기
-                        location.href="/dish/list"; //새로운 요청
+                    Swal.fire(data).then(()=>{
+                        //location.reload();
+                        location.href = '/dish/list';
                     });
+
                 },
                 error: function (xhr, status, error) {
                     Swal.fire("저장을 실패하였습니다.");

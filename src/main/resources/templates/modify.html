@@ -15,6 +15,111 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
+    <div class="container mt-5">
+        <div class="w-50 mx-auto"> <!--row->col 12칸-->
+            <div class="card"><!--card-header, card-body, card-footer-->
+                <!--색상 : muted, primary, success, info,warning, danger, secondary, white, dark, light-->
+                <!--적용 : bg-배경색, text-문자색, button-버튼색, button-outline-선색-->
+                <div class="card-header bg-warning text-dark">
+                    <!--여백 m-바깥쪽, p-안쪽, t-위쪽, b-아래쪽, s-왼쪽, e-오른쪽-->
+                    <h4 class="mb-0">음식 수정</h4>
+                </div>
+                <div class="card-body">
+                    <form id="modifyForm" method="post">
+                        <!--수정시 기본키의 값은 숨김처리 또는 요청할때 값으로 전달(http://localhost:8080/modify/1)-->
+                        <!--기본키를 숨김처리 : service에서 modelmapper 변환해서 수정
+                        요청으로 기본키를 전달할 때 : service에서 builder를 이용해서 개개의 값을 변경-->
+                        <input name="pid" th:value="${dishDTO.pid}" type="hidden">
+                        <!-- class: 디자인, id : 태그에 변수지정(중복없음) style: 수동으로 해당태그만 디자인 적용-->
+                        <div class="mb-3">
+                            <label class="form-label">*분류:</label>
+                            <!--name : 태그에 변수명, form에 object를 지정한 경우에는 field로 대신 사용-->
+                            <!--value : 변수에 값, field사용시 value는 생략-->
+                            <!--text : 태그사이에 들어갈 내용-->
+                            <select class="form-select" name="category">
+                                <option th:each="type:${types}"
+                                th:selected="${type.name() == dishDTO.category.name()}"
+                                th:text="${type.description}"
+                                th:value="${type.name()}"><!--수정에서만 추가(selected)-->
+                                    한식
+                                </option>
+                            </select>
+                        </div>
+                        <!--type 종류는 : text, number, password, email, tel, url, date, checkbox, radio, file, color
+                        button, submit, reset, hidden-->
+                        <div class="mb-3">
+                            <label class="form-label">*음식명:</label>
+                            <input class="form-control" name="dishname" th:value="${dishDTO.dishname}"
+                                   type="text">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">*음식가격</label>
+                            <input class="form-control" type="number" name="price" th:value="${dishDTO.price}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">*음식설명:</label>
+                            <!--rows : 행수, cols : 열수-->
+                            <textarea class="form-control" name="desc" th:text="${dishDTO.desc}" rows="3"></textarea>
+                        </div>
+                        <!--정렬: 대상-정렬, text-문자대상 start:왼쪽정렬, center:가운데정렬, end-오른쪽정렬-->
+                        <!-- align-대상(items, text) 객체대상, top:위쪽, middle:가운데정렬(세로), bottom(아래쪽)-->
+                        <!--객체 정렬 : d-flex justify-content-start(왼쪽),center(가운데),end(오른쪽),between(양쪽끝)
+                        around(균등여백), evenly(동일간격)-->
+                        <div class="text-end">
+                            <!--이동할 주소가 없으면, javascript 동작-->
+                            <button class="btn btn-primary" id="modifyButton" type="button">
+                                <i class="bi-file-earmark-check"></i>저장
+                            </button>
+                            <!--이동할 주소가 있으면, 직접 동작-->
+                            <a class="btn btn-danger" th:href="@{/dish/list}">
+                                <i class="bi-file-earmark-excel"></i>목록
+                            </a>
+                        </div>
+                    </form>
+                    <!--태그에 이름을 지정하는 방법은 2가지 : id-페이지에 하나만 존재, class-페이지내에 여러개가 존재-->
+                    <!--스크립트에서 id 사용은 #아이디명, class 사용은  .클래스명-->
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script th:inline="javascript"> <!--inline를 적용해서 thymeleaf에서 스크립트가 정상적으로 적용-->
+        //jquery는 $명령어(function() {기능구현});
+        $(document).ready(function (){ //문서를 브라우저에 출력이 되었으면
+            $('#modifyButton').on('click', function() {
+                //const 상수선언시(수정을 안하고 사용만 할 때), let, var(수정해서 사용할 경우)
+                var form = $("#modifyForm")[0];  //태그의 내용을 읽을 때는 배열로 읽어서 처리
+                var formData = new FormData(form); //form내에 있는 name과 값을 읽어와 저장
+
+                $.ajax({
+                    //요청
+                    url: '/dish/modify', //요청
+                    method: 'post', //방식
+                    data: formData, //전달값(일반변수, 여러변수, formData(map))등에 따라 적용방법이 다르다.
+                    processData: false,
+                    contentType: false,
+
+                    //성공
+                    success: function(data){
+                        Swal.fire("수정하였습니다.").then(()=>{
+                            location.href='/dish/list';
+                        });
+                    },
+                    //실패
+                    error: function(xhr, status, error) {
+                        Swal.fire("수정을 실패하였습니다.");
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
+<!--
+영역, 구역, 분리, 구분 : div(일반적)
+글자 : h, p, span
+아이콘 : i
+표 : table, thead, tbody, tr, th, td
+입력 : form, label, input, textarea, select
+연결 : a
+-->

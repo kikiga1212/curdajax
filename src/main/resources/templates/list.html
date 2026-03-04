@@ -75,7 +75,7 @@
                         $.ajax({
                             url: '/dish/remove', //요청명
                             method : 'GET',  //요청방식
-                            date : {  //전달할 값
+                            data : {  //전달할 값
                                 pid : pid //변수명 : 값
                             },
                             //responseEntity로 받은 결과값
@@ -83,6 +83,7 @@
                             success: function (data) {  //200번으로 처리 성공시
                                 Swal.fire(data).then(()=>{ //메세지에서 예버튼을 클릭하면
                                     location.reload(); //현재페이지를 다시 읽는다.
+                                    //javascript를 이용해서 일부분을 삭제
                                 });
                             },
                             //HttpStatus.INTERNAL_SERVER_ERROR==>stauts.body("저장을 실패하였습니다."==>error
